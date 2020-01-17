@@ -1,6 +1,7 @@
 import asyncio
 import websockets
 import json
+from typing import Dict
 
 
 async def ws_handler(websocket, path):
@@ -11,8 +12,18 @@ async def ws_handler(websocket, path):
     await websocket.send(greeting)
 
     async for message in websocket:
-        data = json.loads(message)
-
+        data: Dict[str, any] = json.loads(message)
+        if data["type"] == "voos":
+            await websocket.send(json.dumps({
+                "type": "voos",
+                "data": [{
+                    "cod": 1,
+                    "desc": "asdf"
+                }, {
+                    "cod": 2,
+                    "desc": "gfdsa"
+                }]
+            }))
 
 
 start_server = websockets.serve(ws_handler, "localhost", 3000)

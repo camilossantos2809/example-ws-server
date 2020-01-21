@@ -9,8 +9,6 @@ STATUS = ""
 
 async def ws_handler(websocket, path):
     global STATUS
-    host = await websocket.recv()
-    print(f"msg: {host}", STATUS)
 
     async for message in websocket:
         data: Dict[str, any] = json.loads(message)
@@ -35,11 +33,11 @@ async def ws_handler(websocket, path):
         elif data["type"] == "init_embarque":
             STATUS = "processing"
             await asyncio.sleep(5)
+            STATUS = "initiated"
             await websocket.send(json.dumps({
                 "type": "init_embarque",
                 "data": {"success": True}
             }))
-            STATUS = "initiated"
         elif data["type"] == "end_embarque":
             await asyncio.sleep(5)
             STATUS = "not_boarding"

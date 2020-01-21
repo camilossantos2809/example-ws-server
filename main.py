@@ -50,6 +50,11 @@ async def ws_handler(websocket, path):
                 "type": "status",
                 "data": STATUS
             }))
+        elif data["type"] == "cancel":
+            STATUS = ""
+            await websocket.send(json.dumps({
+                "type": "cancel"
+            }))
 
 start_server = websockets.serve(ws_handler, "0.0.0.0", 3000)
 
